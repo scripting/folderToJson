@@ -9,4 +9,3 @@ folderToJson.getJson ("node_modules", function (err, jsontext) {
 		console.log (jsontext);
 		}
 	});
-

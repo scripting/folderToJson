@@ -1,7 +1,7 @@
 {
 	"name": "foldertojson",
-	"description": "Create a JavaScript object that represents the structure of a folder.",
-	"version": "0.4.1",
+	"description": "Generates a JavaScript object (or JSON text) that represents the structure of a folder.",
+	"version": "0.4.2",
 	"main": "foldertojson.js",
 	"license": "MIT",
 	"repository": {
@@ -11,7 +11,7 @@
 	"files": [
 		"foldertojson.js"
 		],
-	"dependencies" : {
+	"dependencies": {
 		"daveutils": "*",
 		"davefilesystem": "*"
 		} 
