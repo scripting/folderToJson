@@ -1,4 +1,4 @@
-var myVersion = "0.4.0", myProductName = "foldertojson";
+var myVersion = "0.4.1", myProductName = "foldertojson";
 
 exports.folderVisiter = folderVisiter; 
 exports.getObject = getObject; 
@@ -7,8 +7,6 @@ exports.getJson = getJson;
 const fs = require ("fs");
 const utils = require ("daveutils");
 const filesystem = require ("davefilesystem");
-
-const folderpath = "node_modules/";
 
 function folderVisiter (folderpath, fileCallback, inlevelCallback, outlevelCallback, includeFileCallback, completionCallback) {
 	function doFolder (folderpath, callback) {
