@@ -1,5 +1,9 @@
 var myVersion = "0.4.0", myProductName = "foldertojson";
 
+exports.folderVisiter = folderVisiter; 
+exports.getObject = getObject; 
+exports.getJson = getJson; 
+
 const fs = require ("fs");
 const utils = require ("daveutils");
 const filesystem = require ("davefilesystem");
@@ -63,33 +67,43 @@ function folderVisiter (folderpath, fileCallback, inlevelCallback, outlevelCallb
 		completionCallback (err);
 		});
 	}
-
-var jstruct = new Object (), stack = new Array ();
-function completionCallback (err) {
-	if (err) {
-		console.log (err.message);
+function getObject (folderpath, callback) {
+	var jstruct = new Object (), stack = new Array ();
+	function completionCallback (err) {
+		if (err) {
+			callback (err);
+			}
+		else {
+			callback (undefined, jstruct);
+			}
 		}
-	else {
-		console.log (utils.jsonStringify (jstruct));
+	function inlevelCallback (foldername) {
+		jstruct [foldername] = new Object ();
+		stack.push (jstruct);
+		jstruct = jstruct [foldername];
 		}
-	}
-function inlevelCallback (foldername) {
-	jstruct [foldername] = new Object ();
-	stack.push (jstruct);
-	jstruct = jstruct [foldername];
-	}
-function outlevelCallback () {
-	jstruct = stack.pop ();
-	}
-function fileCallback (f) {
-	var fname = utils.stringLastField (f, "/");
-	jstruct [fname] = new Object ();
-	}
-function includeFileCallback (fname) {
-	if (utils.beginsWith (fname, ".")) {
-		return (false);
+	function outlevelCallback () {
+		jstruct = stack.pop ();
 		}
-	return (true);
+	function fileCallback (f) {
+		var fname = utils.stringLastField (f, "/");
+		jstruct [fname] = new Object ();
+		}
+	function includeFileCallback (fname) {
+		if (utils.beginsWith (fname, ".")) {
+			return (false);
+			}
+		return (true);
+		}
+	folderVisiter (folderpath, fileCallback, inlevelCallback, outlevelCallback, includeFileCallback, completionCallback);
 	}
-
-folderVisiter (folderpath, fileCallback, inlevelCallback, outlevelCallback, includeFileCallback, completionCallback);
+function getJson (folderpath, callback) {
+	getObject (folderpath, function (err, jstruct) {
+		if (err) {
+			callback (err);
+			}
+		else {
+			callback (undefined, utils.jsonStringify (jstruct));
+			}
+		});
+	}
