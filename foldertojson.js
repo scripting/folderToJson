@@ -1,4 +1,4 @@
-var myVersion = "0.4.3", myProductName = "folderToJson";
+var myVersion = "0.4.5", myProductName = "folderToJson";
 
 exports.folderVisiter = folderVisiter; 
 exports.getObject = getObject; 
@@ -42,7 +42,7 @@ function folderVisiter (folderpath, fileCallback, inlevelCallback, outlevelCallb
 										}
 									else {
 										if (fileCallback !== undefined) {
-											fileCallback (f);
+											fileCallback (f, stats);
 											doListItem (ix + 1);
 											}
 										}
@@ -83,9 +83,13 @@ function getObject (folderpath, callback) {
 	function outlevelCallback () {
 		jstruct = stack.pop ();
 		}
-	function fileCallback (f) {
+	function fileCallback (f, stats) {
 		var fname = utils.stringLastField (f, "/");
-		jstruct [fname] = new Object ();
+		jstruct [fname] = {
+			ctChars: stats.size,
+			whenModified: stats.mtime,
+			whenCreated: stats.birthtime
+			};
 		}
 	function includeFileCallback (fname) {
 		if (utils.beginsWith (fname, ".")) {
