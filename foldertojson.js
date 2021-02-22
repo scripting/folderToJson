@@ -1,4 +1,4 @@
-var myVersion = "0.4.5", myProductName = "folderToJson";
+var myVersion = "0.4.5", myProductName = "folderToJson"; 
 
 exports.folderVisiter = folderVisiter; 
 exports.getObject = getObject; 
