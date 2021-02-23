@@ -1,4 +1,4 @@
-var myVersion = "0.4.5", myProductName = "folderToJson"; 
+var myVersion = "0.4.7", myProductName = "folderToJson"; 
 
 exports.folderVisiter = folderVisiter; 
 exports.getObject = getObject; 
@@ -29,7 +29,7 @@ function folderVisiter (folderpath, fileCallback, inlevelCallback, outlevelCallb
 									}
 								else {
 									if (stats.isDirectory ()) { //dive into the directory
-										inlevelCallback (fname);
+										inlevelCallback (fname, stats);
 										doFolder (f, function (err) {
 											if (err) {
 												callback (err);
@@ -75,10 +75,14 @@ function getObject (folderpath, callback) {
 			callback (undefined, jstruct);
 			}
 		}
-	function inlevelCallback (foldername) {
-		jstruct [foldername] = new Object ();
+	function inlevelCallback (foldername, stats) {
+		jstruct [foldername] = {
+			whenCreated: stats.birthtime,
+			whenModified: stats.mtime
+			};
+		jstruct [foldername].subs = new Object ();
 		stack.push (jstruct);
-		jstruct = jstruct [foldername];
+		jstruct = jstruct [foldername].subs;
 		}
 	function outlevelCallback () {
 		jstruct = stack.pop ();
@@ -87,8 +91,8 @@ function getObject (folderpath, callback) {
 		var fname = utils.stringLastField (f, "/");
 		jstruct [fname] = {
 			ctChars: stats.size,
-			whenModified: stats.mtime,
-			whenCreated: stats.birthtime
+			whenCreated: stats.birthtime,
+			whenModified: stats.mtime
 			};
 		}
 	function includeFileCallback (fname) {
